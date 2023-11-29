@@ -19,7 +19,8 @@ def load_photo_list():
 
 def shufle(update: Update, context: CallbackContext):
     """Перемешать мемы."""
-    stop_if_not_oracle(update.effective_chat.id, context)
+    if stop_if_not_oracle(update.effective_chat.id, context):
+        return
     global photo_list
     if not photo_list:
         context.bot.send_message(
@@ -69,7 +70,8 @@ def how_many_mems(update: Update, context: CallbackContext):
 
 def send_photo_by_number(update: Update, context: CallbackContext):
     """Запрос мема по индексу."""
-    stop_if_not_oracle(update.effective_chat.id, context)
+    if stop_if_not_oracle(update.effective_chat.id, context):
+        return
     try:
         photo_number = int(update.message.text)
         if 1 <= photo_number <= len(photo_list):

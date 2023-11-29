@@ -25,4 +25,4 @@ def stop_if_not_oracle(chat_id, context):
             text=message,
             parse_mode='Markdown'
         )
-        return
+        return True
