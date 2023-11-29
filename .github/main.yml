@@ -1,0 +1,45 @@
+name: Deploy to Remote Server
+
+on:
+  push:
+    branches:
+      - main  # или любая другая ваша основная ветка
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git credentials
+      run: echo "${{ secrets.GIT_PASSWORD }}" > ~/.git-credentials
+
+    - name: SSH into remote server and update code
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          cd memoracle/MemOracle/
+          git pull
+
+    - name: Kill existing screen sessions
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          pkill screen || true
+
+    - name: Create and run screen session
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          screen -S screen_bot -d -m bash -c 'source venv/bin/activate && python mem_bot.py'
