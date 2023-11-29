@@ -14,13 +14,10 @@ jobs:
       run: echo "${{ secrets.GIT_PASSWORD }}" > ~/.git-credentials
 
     - name: SSH into remote server and update code
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-        passphrase: ${{ secrets.SSH_PASSWORD }}
-        script: |
-          cd memoracle/MemOracle/
-          git pull &&
-          pkill screen || true &&
-          screen -S screen_bot -d -m bash -c 'source venv/bin/activate && python mem_bot.py'
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0 
+        with:
+          server: 31.31.196.157
+          username: u2085903
+          password: b45SMOftTG4Bah49
+          server-dir: memoracle/MemOracle/
+
