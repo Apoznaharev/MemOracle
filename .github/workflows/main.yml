@@ -21,10 +21,8 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-      run: |
-        sshpass -p ${{ secrets.SSH_PASSWORD }} ssh u2085903@31.31.196.157 "
-          cd memoracle/MemOracle/ &&
+        script: |
+          cd memoracle/MemOracle/
           git pull &&
           pkill screen || true &&
           screen -S screen_bot -d -m bash -c 'source venv/bin/activate && python mem_bot.py'
-        "
