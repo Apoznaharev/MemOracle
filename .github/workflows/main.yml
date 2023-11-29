@@ -15,6 +15,12 @@ jobs:
       run: echo "${{ secrets.GIT_PASSWORD }}" > ~/.git-credentials
 
     - name: SSH into remote server and update code
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
       run: |
         sshpass -p ${{ secrets.SSH_PASSWORD }} ssh u2085903@31.31.196.157 "
           cd memoracle/MemOracle/ &&
