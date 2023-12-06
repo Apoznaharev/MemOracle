@@ -1,0 +1,16 @@
+version: '3.8'
+
+volumes:
+  mems_file:
+
+services:
+
+  backend:
+    build: /
+    restart: always
+    volumes:
+      - mems_file:/app/mems_actual/
+    env_file:
+      - .env
+
+

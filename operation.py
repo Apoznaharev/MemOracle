@@ -8,7 +8,7 @@ from telegram.ext import CallbackContext
 from validator import stop_if_not_oracle
 
 PHOTOS_DIRECTORY = 'mems_actual'
-photo_list = []
+photo_list: list = []
 
 
 def load_photo_list():
@@ -19,25 +19,26 @@ def load_photo_list():
 
 def shufle(update: Update, context: CallbackContext):
     """Перемешать мемы."""
-    if stop_if_not_oracle(update.effective_chat.id, context):
+    chat_id = update.message.chat_id
+    if stop_if_not_oracle(chat_id, context):
         return
     global photo_list
     if not photo_list:
         context.bot.send_message(
-            chat_id=update.effective_chat.id,
+            chat_id=chat_id,
             text="Папка с мемами пуста."
         )
         return
     try:
         random.shuffle(photo_list)
         context.bot.send_message(
-            chat_id=update.effective_chat.id,
+            chat_id=chat_id,
             text="Мемы перемешаны."
         )
     except Exception as e:
         print(f"Error: {e}")
         context.bot.send_message(
-            chat_id=update.effective_chat.id,
+            chat_id=chat_id,
             text="Что-то пошло не так."
         )
 

@@ -15,7 +15,6 @@ load_dotenv()
 ORACLE_ID = os.getenv('ORACLE_ID')
 TOKEN = os.getenv('TOKEN')
 PHOTOS_DIRECTORY = 'mems_actual'
-photo_list = []
 
 
 def main():
