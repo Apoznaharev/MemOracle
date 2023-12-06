@@ -6,7 +6,7 @@ volumes:
 services:
 
   backend:
-    build: /
+    build: .
     restart: always
     volumes:
       - mems_file:/app/mems_actual/
