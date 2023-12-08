@@ -36,7 +36,7 @@ jobs:
       with:
         host: 194.67.110.42
         username: root
-        passphrase: xVoL*@whh7zk
+        password: xVoL*@whh7zk
         source: "docker-compose.yml"
         target: "MemOracle"
     - name: Executing remote ssh commands to deploy
@@ -44,12 +44,13 @@ jobs:
       with:
         host: 194.67.110.42
         username: root
-        passphrase: xVoL*@whh7zk
+        password: xVoL*@whh7zk
         script: |
           cd MemOracle
           sudo docker compose pull
           sudo docker compose down
           sudo docker compose up -d
           sudo docker system prune -af
+          
 
 
