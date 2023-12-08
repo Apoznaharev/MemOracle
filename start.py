@@ -23,7 +23,6 @@ def start(update, context):
             '(https://t.me/metpoz), и каждый понедельник у тебя будет шанс '
             'узнать свою судьбу. А сейчас ты можешь получить случайный мем '
             'нажав кнопку внизу, или отправив команду /random .'),
-        parse_mode='Markdown',
         reply_markup=ReplyKeyboardMarkup(
             buttons,
             resize_keyboard=True
