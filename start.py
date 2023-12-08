@@ -15,7 +15,7 @@ def start(update, context):
     chat_id = update.effective_chat.id
     buttons = [['/random'], ['/how_many']]
     if not check_is_not_oracle(chat_id):
-        buttons.append(['/shufle'])
+        buttons.append(['/shufle'], ['/order'])
     context.bot.send_message(
         chat_id=chat_id,
         text=(
