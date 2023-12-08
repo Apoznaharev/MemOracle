@@ -8,7 +8,8 @@ from validator import stop_if_not_oracle
 def photo_handler(update: Update, context: CallbackContext) -> None:
     """Метод сохранения фотографий."""
     chat_id = update.message.chat_id
-    stop_if_not_oracle(chat_id, context)
+    if stop_if_not_oracle(chat_id, context):
+        return
     if update.message.photo:
         photo = update.message.photo[-1]
         file_id = photo.file_id

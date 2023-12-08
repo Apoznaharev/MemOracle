@@ -5,7 +5,7 @@ volumes:
 
 services:
 
-  backend:
+  bot:
     build: .
     restart: always
     volumes:
