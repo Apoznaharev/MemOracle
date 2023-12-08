@@ -29,6 +29,8 @@ def main():
     dispatcher = updater.dispatcher
     
     dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('order', load_photo_list))
+
     dispatcher.add_handler(CommandHandler('random', random_photo))
     dispatcher.add_handler(CommandHandler('how_many', how_many_mems))
     dispatcher.add_handler(CommandHandler('shufle', shufle))
