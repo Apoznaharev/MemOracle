@@ -1,16 +1,10 @@
 """Модуль проверки владельца бота."""
-import os
-
-from dotenv import load_dotenv
-
-load_dotenv()
-
-ORACLE_ID = os.getenv('ORACLE_ID')
+import constants
 
 
 def check_is_not_oracle(chat_id):
     """Асинхронный метод проверки, является ли пользователь не владельцем."""
-    return str(chat_id) != ORACLE_ID
+    return str(chat_id) != constants.ORACLE_ID
 
 
 def stop_if_not_oracle(chat_id, context):

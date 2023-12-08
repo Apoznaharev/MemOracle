@@ -5,16 +5,16 @@ import random
 from telegram import Update
 from telegram.ext import CallbackContext
 
+import constants
 from validator import stop_if_not_oracle
 
-PHOTOS_DIRECTORY = 'mems_actual'
 photo_list: list = []
 
 
 def load_photo_list():
     """Загрузка мемов из папки."""
     global photo_list
-    photo_list = os.listdir(PHOTOS_DIRECTORY)
+    photo_list = os.listdir(constants.PHOTOS_DIRECTORY)
 
 
 def shufle(update: Update, context: CallbackContext):
@@ -49,10 +49,10 @@ def random_photo(update: Update, context: CallbackContext):
     if not photo_list:
         update.message.reply_text("Папка с мемами пуста.")
         return
-    random_number = random.randint(1, len(photo_list)-1)
+    random_number = random.randint(1, len(photo_list) - 1)
     try:
         random_photo_path = os.path.join(
-            PHOTOS_DIRECTORY,
+            constants.PHOTOS_DIRECTORY,
             photo_list[random_number]
         )
         update.message.reply_photo(photo=open(random_photo_path, 'rb'))
@@ -75,23 +75,25 @@ def send_photo(update: Update, context: CallbackContext):
         return
 
     try:
-        # Пытаемся получить мем по индексу
         photo_number = int(update.message.text)
         if 1 <= photo_number <= len(photo_list):
             photo_path = os.path.join(
-                PHOTOS_DIRECTORY,
+                constants.PHOTOS_DIRECTORY,
                 photo_list[photo_number - 1]
             )
             update.message.reply_photo(photo=open(photo_path, 'rb'))
             return
+        else:
+            update.message.reply_text(
+                f'Нужно выбрать число от 1 до {len(photo_list)}.'
+            )
     except ValueError:
-        pass  # Проигнорировать ошибку, если не удалось получить мем по индексу
+        pass
 
     try:
-        # Пытаемся получить мем по имени файла
         photo_name = update.message.text
         photo_path = os.path.join(
-            PHOTOS_DIRECTORY,
+            constants.PHOTOS_DIRECTORY,
             photo_name
         )
 
@@ -103,5 +105,5 @@ def send_photo(update: Update, context: CallbackContext):
             )
     except ValueError:
         update.message.reply_text(
-            "Пожалуйста, отправь правильное имя файла или цифру для получения фотографии."
+            "Отправь имя файла или цифру для получения фотографии."
         )

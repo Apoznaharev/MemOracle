@@ -1,56 +1,48 @@
 """Главный модуль бота."""
 import logging
-import os
+import sys
 
-from dotenv import load_dotenv
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
-from operation import (how_many_mems, load_photo_list, random_photo,
-                       send_photo, shufle)
-from save import photo_handler, delete_photo_by_command
+import constants
+from operation import how_many_mems, load_photo_list, random_photo, shufle
+from save import save_foto
 from start import start
+from text_filter import handle_delete_or_send_photo
 
-load_dotenv()
 
-ORACLE_ID = os.getenv('ORACLE_ID')
-TOKEN = os.getenv('TOKEN')
-PHOTOS_DIRECTORY = 'mems_actual'
+def log_exception(exc_type, exc_value, exc_traceback):
+    """Обработчик необработанных исключений для логгирования."""
+    logging.error(
+        "Uncaught exception",
+        exc_info=(exc_type, exc_value, exc_traceback)
+    )
 
-def handle_delete_or_send_photo(update, context):
-    """Обработчик для удаления или отправки фотографии."""
-    text = update.message.text
-
-    if text.startswith('delete__'):
-        # Если сообщение начинается с /delete_, обработать удаление
-        delete_photo_by_command(update, context)
-    else:
-        # Иначе обработать отправку фотографии
-        send_photo(update, context)
 
 def main():
     """Основная логика бота."""
-    logging.basicConfig(
-        filename='my_log_file.log',
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        level=logging.INFO
-    )
+    logging.basicConfig(filename='my_log_file.log', level=logging.INFO)
+
+    # Регистрация обработчика необработанных исключений
+    sys.excepthook = log_exception
+
     load_photo_list()
 
-    updater = Updater(token=TOKEN, use_context=True)
+    updater = Updater(token=constants.TOKEN, use_context=True)
     dispatcher = updater.dispatcher
-    
+
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('order', load_photo_list))
-
     dispatcher.add_handler(CommandHandler('random', random_photo))
     dispatcher.add_handler(CommandHandler('how_many', how_many_mems))
     dispatcher.add_handler(CommandHandler('shufle', shufle))
 
-    dispatcher.add_handler(
-        MessageHandler(Filters.text & ~Filters.command, handle_delete_or_send_photo)
-    )
-    dispatcher.add_handler(MessageHandler(Filters.photo, photo_handler))
-
+    dispatcher.add_handler(MessageHandler(
+        Filters.text & ~Filters.command,
+        handle_delete_or_send_photo
+    ))
+    dispatcher.add_handler(MessageHandler(Filters.photo, save_foto))
+    logging.info(f"Bot started with token: {constants.TOKEN}")
     updater.start_polling()
     updater.idle()
 

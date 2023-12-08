@@ -1,13 +1,7 @@
 """Модуль функции start меморакула."""
-import os
-
-from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup
+
 from validator import check_is_not_oracle
-
-load_dotenv()
-
-ORACLE_ID = os.getenv('ORACLE_ID')
 
 
 def start(update, context):

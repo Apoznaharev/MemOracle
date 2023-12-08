@@ -1,24 +1,28 @@
 """Модуль добавление и удаления файлов из папки."""
+import os
+
 from telegram import Update
 from telegram.ext import CallbackContext
+
+import constants
 from operation import load_photo_list
 from validator import stop_if_not_oracle
-import os
-PHOTOS_DIRECTORY = 'mems_actual'
 
 
-def photo_handler(update: Update, context: CallbackContext) -> None:
+def save_foto(update: Update, context: CallbackContext) -> None:
     """Метод сохранения фотографий."""
-    chat_id = update.message.chat_id
+    message = update.message
+    chat_id = message.chat_id
     if stop_if_not_oracle(chat_id, context):
         return
-    if update.message.photo:
-        photo = update.message.photo[-1]
+    if message.photo:
+        photo = message.photo[-1]
         file_id = photo.file_id
         file = context.bot.get_file(file_id)
         file_extension = file.file_path.split('.')[-1]
         file_name = (
-            f"mem_{update.message.date.strftime('%Y.%m.%d')}_{update.message.message_id}.{file_extension}"
+            f"mem_{message.date.strftime('%Y.%m.%d')}_{message.message_id}"
+            f".{file_extension}"
         )
         file.download(f"mems_actual/{file_name}")
         load_photo_list()
@@ -32,6 +36,7 @@ def photo_handler(update: Update, context: CallbackContext) -> None:
             text="Пожалуйста, отправьте фотографию."
         )
 
+
 def delete_photo_by_command(update: Update, context: CallbackContext):
     """Удаление мема по команде /delete__'имя_файла'."""
     if stop_if_not_oracle(update.effective_chat.id, context):
@@ -41,12 +46,14 @@ def delete_photo_by_command(update: Update, context: CallbackContext):
         if len(command_parts) == 2:
             photo_name = command_parts[1]
             photo_path = os.path.join(
-                PHOTOS_DIRECTORY,
+                constants.PHOTOS_DIRECTORY,
                 photo_name
             )
             if os.path.exists(photo_path):
                 os.remove(photo_path)
-                update.message.reply_text(f"Фотография {photo_name} успешно удалена.")
+                update.message.reply_text(
+                    f"Фотография {photo_name} успешно удалена."
+                )
             else:
                 update.message.reply_text(
                     "Извини, такого мема не найдено."
