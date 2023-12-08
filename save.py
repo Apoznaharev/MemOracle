@@ -16,7 +16,7 @@ def photo_handler(update: Update, context: CallbackContext) -> None:
         file = context.bot.get_file(file_id)
         file_extension = file.file_path.split('.')[-1]
         file_name = (
-            f"mem_{update.message.message_id}.{file_extension}"
+            f"mem_{update.message.date.strftime('%Y.%m.%d')}_{update.message.message_id}.{file_extension}"
         )
         file.download(f"mems_actual/{file_name}")
         load_photo_list()
