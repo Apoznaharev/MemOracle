@@ -87,6 +87,7 @@ def send_photo(update: Update, context: CallbackContext):
             update.message.reply_text(
                 f'Нужно выбрать число от 1 до {len(photo_list)}.'
             )
+            return
     except ValueError:
         pass
 
