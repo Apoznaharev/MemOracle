@@ -66,7 +66,7 @@ def random_photo(update: Update, context: CallbackContext):
 def how_many_mems(update: Update, context: CallbackContext):
     """Узнать, сколько мемов."""
     mems_count = len(photo_list)
-    update.message.reply_text(f'В моей базе ровно {mems_count} мемов.')
+    update.message.reply_text(f'Моему взору доступно {mems_count} мемов.')
 
 
 def send_photo_by_number(update: Update, context: CallbackContext):
