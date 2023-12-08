@@ -49,6 +49,7 @@ jobs:
           cd MemOracle
           sudo docker compose pull
           sudo docker compose down
+          sudo systemctl restart docker
           sudo docker compose up -d
           sudo docker system prune -af
           

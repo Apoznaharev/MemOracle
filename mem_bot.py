@@ -41,8 +41,11 @@ def main():
         Filters.text & ~Filters.command,
         handle_delete_or_send_photo
     ))
+
     dispatcher.add_handler(MessageHandler(Filters.photo, save_foto))
+
     logging.info(f"Bot started with token: {constants.TOKEN}")
+
     updater.start_polling()
     updater.idle()
 
