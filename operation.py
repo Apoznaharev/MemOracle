@@ -69,11 +69,13 @@ def how_many_mems(update: Update, context: CallbackContext):
     update.message.reply_text(f'Моему взору доступно {mems_count} мемов.')
 
 
-def send_photo_by_number(update: Update, context: CallbackContext):
-    """Запрос мема по индексу."""
+def send_photo(update: Update, context: CallbackContext):
+    """Запрос мема по индексу или имени файла."""
     if stop_if_not_oracle(update.effective_chat.id, context):
         return
+
     try:
+        # Пытаемся получить мем по индексу
         photo_number = int(update.message.text)
         if 1 <= photo_number <= len(photo_list):
             photo_path = os.path.join(
@@ -81,20 +83,12 @@ def send_photo_by_number(update: Update, context: CallbackContext):
                 photo_list[photo_number - 1]
             )
             update.message.reply_photo(photo=open(photo_path, 'rb'))
-        else:
-            update.message.reply_text(
-                "Извини, у меня не так много мемов."
-            )
+            return
     except ValueError:
-        update.message.reply_text(
-            "Пожалуйста, отправь цифру, чтобы получить фотографию."
-        )
+        pass  # Проигнорировать ошибку, если не удалось получить мем по индексу
 
-def send_photo_by_name(update: Update, context: CallbackContext):
-    """Запрос мема по имени файла."""
-    if stop_if_not_oracle(update.effective_chat.id, context):
-        return
     try:
+        # Пытаемся получить мем по имени файла
         photo_name = update.message.text
         photo_path = os.path.join(
             PHOTOS_DIRECTORY,
@@ -109,5 +103,5 @@ def send_photo_by_name(update: Update, context: CallbackContext):
             )
     except ValueError:
         update.message.reply_text(
-            "Пожалуйста, отправь правильное имя файла для получения фотографии."
+            "Пожалуйста, отправь правильное имя файла или цифру для получения фотографии."
         )
