@@ -16,10 +16,21 @@ ORACLE_ID = os.getenv('ORACLE_ID')
 TOKEN = os.getenv('TOKEN')
 PHOTOS_DIRECTORY = 'mems_actual'
 
+def handle_delete_or_send_photo(update, context):
+    """Обработчик для удаления или отправки фотографии."""
+    text = update.message.text
+
+    if text.startswith('delete__'):
+        # Если сообщение начинается с /delete_, обработать удаление
+        delete_photo_by_command(update, context)
+    else:
+        # Иначе обработать отправку фотографии
+        send_photo(update, context)
 
 def main():
     """Основная логика бота."""
     logging.basicConfig(
+        filename='my_log_file.log',
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
@@ -34,10 +45,9 @@ def main():
     dispatcher.add_handler(CommandHandler('random', random_photo))
     dispatcher.add_handler(CommandHandler('how_many', how_many_mems))
     dispatcher.add_handler(CommandHandler('shufle', shufle))
-    dispatcher.add_handler(CommandHandler('delete', delete_photo_by_command))
 
     dispatcher.add_handler(
-        MessageHandler(Filters.text & ~Filters.command, send_photo)
+        MessageHandler(Filters.text & ~Filters.command, handle_delete_or_send_photo)
     )
     dispatcher.add_handler(MessageHandler(Filters.photo, photo_handler))
 

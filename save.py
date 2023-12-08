@@ -33,11 +33,11 @@ def photo_handler(update: Update, context: CallbackContext) -> None:
         )
 
 def delete_photo_by_command(update: Update, context: CallbackContext):
-    """Удаление мема по команде /delete_'имя_файла'."""
+    """Удаление мема по команде /delete__'имя_файла'."""
     if stop_if_not_oracle(update.effective_chat.id, context):
         return
     try:
-        command_parts = update.message.text.split('_')
+        command_parts = update.message.text.split('__')
         if len(command_parts) == 2:
             photo_name = command_parts[1]
             photo_path = os.path.join(
