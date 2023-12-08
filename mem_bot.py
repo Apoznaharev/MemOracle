@@ -7,7 +7,7 @@ from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from operation import (how_many_mems, load_photo_list, random_photo,
                        send_photo, shufle)
-from save import photo_handler
+from save import photo_handler, delete_photo_by_command
 from start import start
 
 load_dotenv()
@@ -34,6 +34,8 @@ def main():
     dispatcher.add_handler(CommandHandler('random', random_photo))
     dispatcher.add_handler(CommandHandler('how_many', how_many_mems))
     dispatcher.add_handler(CommandHandler('shufle', shufle))
+    dispatcher.add_handler(CommandHandler('delete', delete_photo_by_command))
+
     dispatcher.add_handler(
         MessageHandler(Filters.text & ~Filters.command, send_photo)
     )

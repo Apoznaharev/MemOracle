@@ -3,6 +3,8 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from operation import load_photo_list
 from validator import stop_if_not_oracle
+import os
+PHOTOS_DIRECTORY = 'mems_actual'
 
 
 def photo_handler(update: Update, context: CallbackContext) -> None:
@@ -28,4 +30,32 @@ def photo_handler(update: Update, context: CallbackContext) -> None:
         context.bot.send_message(
             chat_id=chat_id,
             text="Пожалуйста, отправьте фотографию."
+        )
+
+def delete_photo_by_command(update: Update, context: CallbackContext):
+    """Удаление мема по команде /delete_'имя_файла'."""
+    if stop_if_not_oracle(update.effective_chat.id, context):
+        return
+    try:
+        command_parts = update.message.text.split('_')
+        if len(command_parts) == 2:
+            photo_name = command_parts[1]
+            photo_path = os.path.join(
+                PHOTOS_DIRECTORY,
+                photo_name
+            )
+            if os.path.exists(photo_path):
+                os.remove(photo_path)
+                update.message.reply_text(f"Фотография {photo_name} успешно удалена.")
+            else:
+                update.message.reply_text(
+                    "Извини, такого мема не найдено."
+                )
+        else:
+            update.message.reply_text(
+                "Неправильный формат команды. Используйте /delete_'имя_файла'."
+            )
+    except Exception as e:
+        update.message.reply_text(
+            f"Произошла ошибка при удалении фотографии: {str(e)}"
         )
