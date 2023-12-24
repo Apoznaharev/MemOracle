@@ -52,6 +52,3 @@ jobs:
           sudo systemctl restart docker
           sudo docker compose up -d
           sudo docker system prune -af
-          
-
-
